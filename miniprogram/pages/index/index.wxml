@@ -1,0 +1,29 @@
+<!--index.wxml-->
+<view class="page">
+  <view class="page__hd">
+  </view>
+  <view class="page__bd page__bd_spacing">
+    <view class="btn">
+      <!-- <navigator url="../item/item" class="btn-avatar"> -->
+        <cover-view class="btn-avatar bubble" bindtap="onCreate" hover-class="bubble-active" hover-start-time="0" hover-stay-time="100" hover-stop-propagation="true">
+          <cover-image src="../../images/添加_填充.png">
+          </cover-image>
+        </cover-view>
+      <!-- </navigator> -->
+    </view>
+  </view>
+  <view wx:if="{{days.length > 0}}">
+    <view class="weui-cells  weui-cells_after-title">
+      <view wx:for="{{days}}"  class="weui-cell ">
+          <mp-slideview buttons="{{item.slideButtons}}" icon="{{true}}" bindbuttontap="slideButtonTap">
+              <mp-cell value="{{item.desc}}" footer="{{item.date}}"></mp-cell>
+          </mp-slideview>       
+      </view>
+    </view>
+  </view>
+  <view wx:else>
+    <view class="page__hd">
+      <view class="page__desc">没有提醒</view>
+    </view>
+  </view>
+</view>

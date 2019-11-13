@@ -1,0 +1,54 @@
+/**index.wxss**/
+
+page {
+  background-color: #ededed;
+}
+
+.btn-avatar {
+  width: 200rpx;
+  height: 200rpx;
+  margin: 20rpx;
+  background: #ededed;
+  border-radius: 50%;
+}
+
+.btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bubble {
+  position: relative;
+  overflow: hidden;
+  transform: scale(1);
+  opacity: 1;
+  transition: 0.2s;
+}
+
+.bubble::after {
+  content: "";
+  background: #ededed;
+  opacity: 0;
+  position: absolute;
+  width: 750rpx;
+  height: 750rpx;
+  left: calc(50% - 375rpx);
+  top: calc(50% - 375rpx);
+  margin: auto;
+  border-radius: 50%;
+  transform: scale(1);
+  transition: all 0.5s ease-in-out;
+}
+
+.bubble-active {
+  transform: scale(0.8);
+  opacity: 1;
+  transition: 0.2s;
+}
+
+.bubble-active::after {
+  transform: scale(0);
+  opacity: 1;
+  transition: 0s;
+}
