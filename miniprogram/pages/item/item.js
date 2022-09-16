@@ -1,5 +1,6 @@
 var calanderHelper = require("calanderHelper.js")
 const tmplId = 'vkE0Bu2itEgO-8OmANVWWS-cDCRgKrEFpKgWxeHmz2k'
+const { laf_cloud } = getApp();
 Page({
   data: {
     data: {
@@ -17,6 +18,7 @@ Page({
     multiIndex: [0, 0],
   },
   pickerInit: function(data) {
+    console.log(data)
     let months = Array.from({
       length: 12
     }, (v, i) => 1 + i)
@@ -77,37 +79,53 @@ Page({
       wx.requestSubscribeMessage({
         // 传入订阅消息的模板id，模板 id 可在小程序管理后台申请
         tmplIds: [tmplId],
+        fail(res) {
+          console.log(res)
+        },
         success(res) {
+          console.log("requestSubscribeMessage")
           // 申请订阅成功
           if (res.errMsg === 'requestSubscribeMessage:ok') {
-            // 这里将订阅的课程信息调用云函数存入db
-            wx.cloud
-              .callFunction({
-                name: 'subscribe',
-                data: {
-                  data: data,
-                  templateId: tmplId,
-                },
-              })
-              .then(() => {
+            wx.login({
+              timeout: 1000,
+              fail(res) {
+                console.log(res)
                 wx.showToast({
-                  title: '成功',
-                  icon: 'success',
-                  duration: 1000,
-                  complete: () => {
-                    setTimeout(function() {
-                      wx.navigateBack({})
-                    }, 1000);
-                  }
-                })
-              })
-              .catch(() => {
-                wx.showToast({
-                  title: '失败',
+                  title: '登录失败',
                   icon: 'none',
                   duration: 1000,
                 });
-              });
+              },
+              success (res) {
+                if (res.code) {
+                  //发起网络请求
+                  console.log("login")
+                  laf_cloud.invoke('subscribe', {data: data, templateId: tmplId, code:res.code}).then(() => {
+                    console.log("here")
+                    wx.showToast({
+                      title: '成功',
+                      icon: 'success',
+                      duration: 1000,
+                      complete: () => {
+                        setTimeout(function() {
+                          wx.navigateBack({})
+                        }, 1000);
+                      }
+                    })
+                  })
+                  .catch((res) => {
+                    console.log(res)
+                    wx.showToast({
+                      title: '失败',
+                      icon: 'none',
+                      duration: 1000,
+                    });
+                  });
+                } else {
+                  console.log('登录失败！' + res.errMsg)
+                }
+              }
+            })
           }
         },
       });
